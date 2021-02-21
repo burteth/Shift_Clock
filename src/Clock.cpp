@@ -5,13 +5,9 @@
 #include "colors.cpp"
 
 
-Clock::Clock(){
-    // this->motor = Stepper(200, 2, 3, 4, 5); 
+Clock::Clock(Stepper motor_in) : motor(motor_in){
 
-    // motor.setSpeed(20); 
-
-    // motor.step(200);
-    // delay(1000);
+    motor.setSpeed(40);
 
 }
 
@@ -43,7 +39,7 @@ void Clock::Init(int rgb_red_pin_in, int rgb_green_pin_in,
 
                 // Setup Motor
                 int steps_per_revolution = 200;
-                int stepper_speed = 20;
+                int stepper_speed = 20;                
                 
             // motor = Stepper(steps_per_revolution, 
             //         motor_a_pin_in, 
@@ -76,11 +72,7 @@ void Clock::UpdateLEDs(){
     rgb temp_rgb = temp_hsv.to_rgb();    
     
 
-    SetRGBColor(temp_rgb.r, temp_rgb.g, temp_rgb.b);
-    Serial.println(temp_rgb.r, 5);
-    Serial.println(temp_rgb.g, 5);
-    Serial.println(temp_rgb.b, 5);
-    Serial.println();
+    SetRGBColor(temp_rgb.r, temp_rgb.g, temp_rgb.b);    
 
 };
 
@@ -103,7 +95,7 @@ void Clock::StepMotor(){
         Serial.println();
     }
 
-    // motor.step(steps_needed);
+    motor.step(steps_needed);
     steps_this_cycle += steps_needed;
     
 

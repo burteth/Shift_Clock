@@ -8,7 +8,7 @@
 class Clock{
 public:
     
-    Clock();
+    Clock(Stepper motor_in);
 
     void Init(int rgb_red_pin_in, int rgb_green_pin_in, 
           int rgb_blue_pin_in,int motor_a_pin_in, 
@@ -30,7 +30,7 @@ public:
     int MOTOR_B_BAR_PIN;
 
     // Motor
-    // Stepper motor;
+    Stepper motor;
 
 
     //Timing

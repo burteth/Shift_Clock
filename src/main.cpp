@@ -17,11 +17,12 @@ int motor_b_pin = 4;
 int motor_b_bar_pin = 5;
 
 // Speed up factor how many sec per loop
-int speed_up_factor = 0;
-
-Clock led_clock;
+int speed_up_factor = 1000;
 
 Stepper motor(200,2,3,4,5);
+
+Clock led_clock(motor);
+
 
 void setup() {
     Serial.begin(9600);
@@ -31,8 +32,6 @@ void setup() {
             motor_b_bar_pin, speed_up_factor);
 
     Wire.begin();
-
-    motor.setSpeed(40);
     
 }
 
@@ -40,13 +39,12 @@ void loop() {
         
     led_clock.PrintTime();
 
-    // led_clock.UpdateLEDs();    
+    led_clock.UpdateLEDs();
 
-    // led_clock.StepMotor();
+    led_clock.StepMotor();
 
-    // led_clock.SpeedTimeUp();
+    led_clock.SpeedTimeUp();
     
-    motor.step(200);
 
     delay(1000);
 }
