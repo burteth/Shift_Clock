@@ -1,6 +1,19 @@
-#include "colors.h"
 
-rgb hsv::to_rbg(){
+
+struct rgb{
+    double r;       // a fraction between 0 and 1
+    double g;       // a fraction between 0 and 1
+    double b;       // a fraction between 0 and 1
+  
+};
+
+struct hsv{
+    double h;       // angle in degrees
+    double s;       // a fraction between 0 and 1
+    double v;       // a fraction between 0 and 1
+    
+    
+    rgb to_rgb(){
     double      hh, p, q, t, ff;
     long        i;
     rgb         out;
@@ -54,5 +67,9 @@ rgb hsv::to_rbg(){
         out.b = q;
         break;
     }
+    out.r *= 255.0;
+    out.g *= 255.0;
+    out.b *= 255.0;
     return out;     
-}
+    }
+};

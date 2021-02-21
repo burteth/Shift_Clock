@@ -1,9 +1,11 @@
 #include <Arduino.h>
-#include "Clock.h"
 #include <RTClib.h>
 #include <Wire.h>
+#include <Stepper.h>
+#include "Clock.h"
+#include "colors.cpp"
 
-
+// LED Pins
 int rgb_red_pin = 11;
 int rgb_green_pin = 10;
 int rgb_blue_pin = 9;
@@ -14,41 +16,41 @@ int motor_a_bar_pin = 3;
 int motor_b_pin = 4;
 int motor_b_bar_pin = 5;
 
-// Clock led_clock;
+// Speed up factor how many sec per loop
+int speed_up_factor = 0;
 
+Clock led_clock;
 
-char t[32];
-
-RTC_DS3231 rtc;
-
+Stepper motor(200,2,3,4,5);
 
 void setup() {
     Serial.begin(9600);
         
-    // led_clock.Init(rgb_red_pin, rgb_green_pin, rgb_blue_pin,
-    //         motor_a_pin, motor_a_bar_pin, motor_b_pin, 
-    //         motor_b_bar_pin);
+    led_clock.Init(rgb_red_pin, rgb_green_pin, rgb_blue_pin,
+            motor_a_pin, motor_a_bar_pin, motor_b_pin, 
+            motor_b_bar_pin, speed_up_factor);
 
     Wire.begin();
-    rtc.begin();
-    rtc.adjust(DateTime(F(__DATE__),F(__TIME__)));
+
+    motor.setSpeed(40);
     
 }
 
 void loop() {
         
-    // led_clock.PrintTime();
-    DateTime now = rtc.now();
+    led_clock.PrintTime();
 
-    sprintf(t, "%02d:%02d:%02d %02d/%02d/%02d",  now.hour(), now.minute(), now.second(), now.day(), now.month(), now.year());  
+    // led_clock.UpdateLEDs();    
+
+    // led_clock.StepMotor();
+
+    // led_clock.SpeedTimeUp();
     
-    Serial.print(F("Date/Time: "));
-    Serial.println(t);
+    motor.step(200);
 
     delay(1000);
-
-    // delay(1000);
-  
 }
+
+
 
 

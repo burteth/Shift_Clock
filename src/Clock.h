@@ -1,6 +1,9 @@
-
 #ifndef Clock_h
 #define Clock_h
+
+#include <RTClib.h>
+#include <Wire.h>
+#include <Stepper.h>
 
 class Clock{
 public:
@@ -10,7 +13,7 @@ public:
     void Init(int rgb_red_pin_in, int rgb_green_pin_in, 
           int rgb_blue_pin_in,int motor_a_pin_in, 
           int motor_a_bar_pin_in, int motor_b_pin_in, 
-          int motor_b_bar_pin_in);
+          int motor_b_bar_pin_in, int speed_up_factor_in);
 
     // static unsigned long long seconds_per_week;
     // static unsigned long long seconds_per_day;
@@ -26,9 +29,15 @@ public:
     int MOTOR_B_PIN;
     int MOTOR_B_BAR_PIN;
 
-    //Timing
-    // int seconds_this_week;
+    // Motor
+    // Stepper motor;
 
+
+    //Timing
+    int speed_up_factor;
+    int steps_this_cycle;
+    
+    RTC_DS3231 rtc;
 
 
     void UpdateLEDs();
@@ -38,6 +47,17 @@ public:
     void ResetClockHand();
 
     void PrintTime();
+
+    unsigned long SecondsThisWeek();
+
+    int MinutesThisWeek();
+
+    void SetRGBColor(int red_light_value, int green_light_value, int blue_light_value);
+
+    void SpeedTimeUp();    
+
+    int perdict_num_steps();
+
 
 };
 
