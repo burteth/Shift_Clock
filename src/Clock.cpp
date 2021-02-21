@@ -1,11 +1,15 @@
 #include "Clock.h"
 #include "DS3231.h"
 
+Clock::Clock() : rtc(SDA,SCL){}
 
-Clock::Clock(int rgb_red_pin_in, int rgb_green_pin_in, 
+
+void Clock::Init(int rgb_red_pin_in, int rgb_green_pin_in, 
              int rgb_blue_pin_in, int motor_a_pin_in, 
              int motor_a_bar_pin_in, int motor_b_pin_in, 
-             int motor_b_bar_pin_in) : rtc(SDA,SCL){
+             int motor_b_bar_pin_in){
+
+                // rtc(SDA,SCL);
 
                 // Initialize LED Pins
                 RGB_RED_PIN = rgb_red_pin_in;
@@ -20,10 +24,10 @@ Clock::Clock(int rgb_red_pin_in, int rgb_green_pin_in,
 
 
                 // this->rtc(SDA, SCL);
-                rtc.begin();
+                // rtc.begin();
 
-                Time t = rtc.getTime();
-                Serial.print(t.date, DEC);
+                // Time t = rtc.getTime();
+                // Serial.write(t.date, DEC);
 
             };
 

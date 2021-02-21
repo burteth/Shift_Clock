@@ -7,7 +7,9 @@
 class Clock{
 public:
     
-    Clock(int rgb_red_pin_in, int rgb_green_pin_in, 
+    Clock();
+
+    void Init(int rgb_red_pin_in, int rgb_green_pin_in, 
           int rgb_blue_pin_in,int motor_a_pin_in, 
           int motor_a_bar_pin_in, int motor_b_pin_in, 
           int motor_b_bar_pin_in);
