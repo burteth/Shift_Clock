@@ -40,26 +40,18 @@ void Clock::Init(int rgb_red_pin_in, int rgb_green_pin_in,
                 // Setup Motor
                 int steps_per_revolution = 200;
                 int stepper_speed = 20;                
-                
-            // motor = Stepper(steps_per_revolution, 
-            //         motor_a_pin_in, 
-            //         motor_a_bar_pin_in, 
-            //         motor_b_pin_in, 
-            //         motor_b_bar_pin_in); 
-
-            // motor.setSpeed(stepper_speed); 
-
-            // motor.step(200);
-            // delay(1000);
-
+         
 
                 speed_up_factor = speed_up_factor_in;
+
+                OrientHand();
             };
 
 // unsigned long long Clock::seconds_per_week  = 60 * 60 * 24;
 // unsigned long long Clock::seconds_per_day = 604800;
 
-void Clock::UpdateLEDs(){
+void Clock::UpdateLEDs(){    
+
     int min_this_week = MinutesThisWeek();
 
     int min_per_week = 10080;
@@ -81,29 +73,17 @@ void Clock::StepMotor(){
     int perdicted_steps = perdict_num_steps();
 
     int steps_needed = perdicted_steps - steps_this_cycle;
-
-    if (steps_needed){
-        Serial.println();
-        Serial.print("Perdicted Steps: ");
-        Serial.print(perdicted_steps);
-        Serial.println();
-        Serial.print("Starting Steps: ");
-        Serial.print(steps_this_cycle);
-        Serial.println();
-        Serial.print("Steps Needed: ");
-        Serial.print(steps_needed);
-        Serial.println();
+    
+    if (steps_needed < 0){
+        steps_needed = 200 - steps_this_cycle + perdicted_steps;
     }
+    Serial.println(steps_needed);
 
     motor.step(steps_needed);
     steps_this_cycle += steps_needed;
-    
 
-    Serial.print("Steps Needed: ");
-    Serial.print(steps_needed);
-    Serial.println();
-    
-
+    // make sure it doesnt get above 200 
+    steps_this_cycle %= 200;
 
 };
 
@@ -182,8 +162,7 @@ void Clock::SpeedTimeUp(){
     rtc.adjust(now.unixtime() + speed_up_factor);
 }
 
-
-int Clock::perdict_num_steps(){
+int Clock::perdict_num_steps(){    
 
     double min_per_day = 60*24;
 
@@ -196,4 +175,14 @@ int Clock::perdict_num_steps(){
     int steps = (percent_of_today * 200.0);
 
     return(steps);
+}
+
+void Clock::OrientHand(){
+
+    Serial.println("Orienting the hand");
+
+    while(digitalRead(7) == 1){
+        motor.step(1);
+        delay(50);
+    }
 }

@@ -17,7 +17,9 @@ int motor_b_pin = 4;
 int motor_b_bar_pin = 5;
 
 // Speed up factor how many sec per loop
-int speed_up_factor = 1000;
+int speed_up_factor = 3024;
+
+int hall_pin = 7;
 
 Stepper motor(200,2,3,4,5);
 
@@ -32,6 +34,7 @@ void setup() {
             motor_b_bar_pin, speed_up_factor);
 
     Wire.begin();
+    pinMode(hall_pin, INPUT);
     
 }
 
@@ -46,7 +49,7 @@ void loop() {
     led_clock.SpeedTimeUp();
     
 
-    delay(1000);
+    delay(50);
 }
 
 
