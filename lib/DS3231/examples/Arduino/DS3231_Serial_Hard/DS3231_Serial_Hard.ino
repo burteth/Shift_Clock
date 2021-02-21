@@ -38,7 +38,7 @@
 // pull-up resistors on the data and clock signals.
 //
 
-#include <DS3231.h>
+#include "DS3231.h"
 
 // Init the DS3231 using the hardware interface
 DS3231  rtc(SDA, SCL);

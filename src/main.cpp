@@ -1,58 +1,60 @@
 #include <Arduino.h>
-// digital pin 2 is the hall pin
-int hall_pin = 2;
-// set number of hall trips for RPM reading (higher improves accuracy)
-float hall_thresh = 100.0;
+#include "DS3231.h"
+#include <time.h>
+#include "Clock.h"
 
-int red_light_pin= 11;
-int green_light_pin = 10;
-int blue_light_pin = 9;
+int rgb_red_pin = 11;
+int rgb_green_pin = 10;
+int rgb_blue_pin = 9;
+
+// Motor Pins
+int motor_a_pin = 2;
+int motor_a_bar_pin = 3;
+int motor_b_pin = 4;
+int motor_b_bar_pin = 5;
+
+Clock led_clock(rgb_red_pin, rgb_green_pin, rgb_blue_pin,
+            motor_a_pin, motor_a_bar_pin, motor_b_pin, 
+            motor_b_bar_pin);
 
 void setup() {
-  // initialize serial communication at 9600 bits per second:
-  Serial.begin(115200);
-  // make the hall pin an input:
-  pinMode(hall_pin, INPUT);
 
-  pinMode(red_light_pin, OUTPUT);
-  pinMode(green_light_pin, OUTPUT);
-  pinMode(blue_light_pin, OUTPUT);
-
-}
-void RGB_color(int red_light_value, int green_light_value, int blue_light_value)
- {
-  analogWrite(red_light_pin, red_light_value);
-  analogWrite(green_light_pin, green_light_value);
-  analogWrite(blue_light_pin, blue_light_value);
-}
-// the loop routine runs over and over again forever:
-void loop() {
-
+    Serial.begin(115200);
     
-  // preallocate values for tach
-//   float hall_count = 1.0;
-//   float start = micros();
-//   bool on_state = false;
-  // counting number of times the hall sensor is tripped
-  // but without double counting during the same trip
-
-if (digitalRead(hall_pin)==0){      
-    Serial.write("Tripped\n");    
-    RGB_color(255, 0, 0);
-} else{
-    Serial.write("Not Tripped\n");
-    RGB_color(0, 0, 0);
-}
 
   
-//   // print information about Time and RPM
-//   float end_time = micros();
-//   float time_passed = ((end_time-start)/1000000.0);
-//   Serial.print("Time Passed: ");
-//   Serial.print(time_passed);
-//   Serial.println("s");
-//   float rpm_val = (hall_count/time_passed)*60.0;
-//   Serial.print(rpm_val);
-//   Serial.println(" RPM");
-  delay(100);        // delay in between reads for stability
 }
+
+void loop() {
+
+    Time t = led_clock.rtc.getTime();
+    // Send date over serial connection
+    Serial.print("Today is the ");
+    Serial.print(t.date, DEC);
+    Serial.print(". day of ");
+    Serial.print(led_clock.rtc.getMonthStr());
+    Serial.print(" in the year ");
+    Serial.print(t.year, DEC);
+    Serial.println(".");
+    
+    // Send Day-of-Week and time
+    Serial.print("It is the ");
+    Serial.print(t.dow, DEC);
+    Serial.print(". day of the week (counting monday as the 1th), and it has passed ");
+    Serial.print(t.hour, DEC);
+    Serial.print(" hour(s), ");
+    Serial.print(t.min, DEC);
+    Serial.print(" minute(s) and ");
+    Serial.print(t.sec, DEC);
+    Serial.println(" second(s) since midnight.");
+
+    // Send a divider for readability
+    Serial.println("  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -");
+    
+    // Wait one second before repeating :)
+    delay (1000);
+
+
+  
+}
+
