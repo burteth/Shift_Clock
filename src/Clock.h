@@ -2,7 +2,7 @@
 #ifndef Clock_h
 #define Clock_h
 
-#include "DS3231.h"
+#include "ds3231.h"
 
 class Clock{
 public:
@@ -31,7 +31,7 @@ public:
     //Timing
     // int seconds_this_week;
 
-    DS3231 rtc;
+    // DS3231 rtc;
 
 
 
@@ -40,6 +40,8 @@ public:
     void StepMotor();
 
     void ResetClockHand();
+
+    void PrintTime();
 
 };
 

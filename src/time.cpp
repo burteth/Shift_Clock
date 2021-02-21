@@ -1,11 +1,11 @@
-#include <Arduino.h>
-#include <Process.h>
-#include <Stepper.h>
-#include <time.h>
-#include <RTClib.h>
-#include "DS3231.h"
+// #include <Arduino.h>
+// #include <Process.h>
+// #include <Stepper.h>
+// #include <time.h>
+// #include <RTClib.h>
+// #include "DS3231.h"
 
-#include "colors.h"
+// #include "colors.h"
 
 
 
