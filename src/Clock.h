@@ -2,8 +2,6 @@
 #ifndef Clock_h
 #define Clock_h
 
-#include "ds3231.h"
-
 class Clock{
 public:
     
@@ -30,8 +28,6 @@ public:
 
     //Timing
     // int seconds_this_week;
-
-    // DS3231 rtc;
 
 
 
