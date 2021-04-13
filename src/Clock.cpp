@@ -28,7 +28,7 @@ void Clock::Init(int rgb_red_pin_in, int rgb_green_pin_in,
                 MOTOR_A_BAR_PIN = motor_a_bar_pin_in;
                 MOTOR_B_PIN = motor_b_pin_in;
                 MOTOR_B_BAR_PIN = motor_b_bar_pin_in;
-
+                
                 rtc.begin();
                 rtc.adjust(DateTime(F(__DATE__),F(__TIME__)));
 
@@ -38,19 +38,19 @@ void Clock::Init(int rgb_red_pin_in, int rgb_green_pin_in,
                 pinMode(RGB_BLUE_PIN, OUTPUT);
 
                 // Setup Motor
-                int steps_per_revolution = 200;
-                int stepper_speed = 20;                
+                // int steps_per_revolution = 200;
+                // int stepper_speed = 20;                
          
 
                 speed_up_factor = speed_up_factor_in;
-
-                OrientHand();
+                
             };
 
 // unsigned long long Clock::seconds_per_week  = 60 * 60 * 24;
 // unsigned long long Clock::seconds_per_day = 604800;
 
 void Clock::UpdateLEDs(){    
+    Serial.println("Updating LEDs");
 
     int min_this_week = MinutesThisWeek();
 
@@ -62,24 +62,41 @@ void Clock::UpdateLEDs(){
 
     hsv temp_hsv({degrees, 1.0, 1.0});
     rgb temp_rgb = temp_hsv.to_rgb();    
-    
-
+    Serial.print("Degrees: ");
+    Serial.println(degrees);
     SetRGBColor(temp_rgb.r, temp_rgb.g, temp_rgb.b);    
 
 };
 
 void Clock::StepMotor(){
+    Serial.println("Stepping Motor");
     
     int perdicted_steps = perdict_num_steps();
 
     int steps_needed = perdicted_steps - steps_this_cycle;
     
-    if (steps_needed < 0){
-        steps_needed = 200 - steps_this_cycle + perdicted_steps;
-    }
-    Serial.println(steps_needed);
+    // if (steps_needed < 0){
+    //     steps_needed = 190 - steps_this_cycle + perdicted_steps;
+    // }
 
-    motor.step(steps_needed);
+    Serial.println("Steps Needed: ");
+    Serial.println(steps_needed);        
+    // exit(1);
+    if (steps_needed < 0){
+        for (int i = 0; i < abs(steps_needed); i++){
+            motor.step(-1);
+            delay(20);
+            Serial.println(steps_needed + i);
+        }
+    }else{
+        for (int i = 0; i < abs(steps_needed); i++){
+            motor.step(1);
+            delay(20);
+            Serial.println(steps_needed - i);                
+        }
+    }
+        
+    
     steps_this_cycle += steps_needed;
 
     // make sure it doesnt get above 200 
@@ -132,19 +149,23 @@ int Clock::MinutesThisWeek(){
     min_this_week += now.hour() * 60;
 
     min_this_week += now.minute();
-
+    Serial.print("min_this_week: ");
+    Serial.println(min_this_week);
     return(min_this_week);
 }
 
 void Clock::PrintTime(){
+    Serial.println("Printing Time");
+
     char t[32];
 
     DateTime now = rtc.now();
-
-    sprintf(t, "%02d:%02d:%02d %02d/%02d/%02d",  now.hour(), now.minute(), now.second(), now.day(), now.month(), now.year());  
     
-    Serial.print(F("Date/Time: "));
-    Serial.println(t);
+    // Serial.println(now.day());
+    // sprintf(t, "%02d:%02d:%02d %02d/%02d/%02d",  now.hour(), now.minute(), now.second(), now.day(), now.month(), now.year());  
+    
+    // Serial.print(F("Date/Time: "));
+    // Serial.println(t);
 
 }
 
@@ -175,14 +196,4 @@ int Clock::perdict_num_steps(){
     int steps = (percent_of_today * 200.0);
 
     return(steps);
-}
-
-void Clock::OrientHand(){
-
-    Serial.println("Orienting the hand");
-
-    while(digitalRead(7) == 1){
-        motor.step(1);
-        delay(50);
-    }
 }

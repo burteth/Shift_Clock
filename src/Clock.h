@@ -35,7 +35,7 @@ public:
 
     //Timing
     int speed_up_factor;
-    int steps_this_cycle;
+    int steps_this_cycle = 0;
     
     RTC_DS3231 rtc;
 
