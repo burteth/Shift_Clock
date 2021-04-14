@@ -7,7 +7,7 @@
 
 Clock::Clock(Stepper motor_in) : motor(motor_in){
 
-    motor.setSpeed(40);
+    motor.setSpeed(20);
 
 }
 
@@ -85,13 +85,13 @@ void Clock::StepMotor(){
     if (steps_needed < 0){
         for (int i = 0; i < abs(steps_needed); i++){
             motor.step(-1);
-            delay(20);
+            delay(40);
             Serial.println(steps_needed + i);
         }
     }else{
         for (int i = 0; i < abs(steps_needed); i++){
             motor.step(1);
-            delay(20);
+            delay(40);
             Serial.println(steps_needed - i);                
         }
     }
